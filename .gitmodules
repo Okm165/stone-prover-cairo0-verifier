@@ -1,0 +1,6 @@
+[submodule "cairo-lang"]
+	path = cairo-lang
+	url = https://github.com/Okm165/cairo-lang.git
+[submodule "stone-prover"]
+	path = stone-prover
+	url = https://github.com/Okm165/stone-prover.git
