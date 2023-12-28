@@ -83,3 +83,11 @@ cairo-run \
     --print_output
 cd ../
 ```
+
+### Future Work and Enhancements
+
+#### Version Compatibility:
+An essential future direction is to ensure compatibility with newer versions of Cairo Lang and Cairo Verifier. This involves analyzing the changes between different versions and updating the repository to accommodate these changes.
+
+#### Continuous Maintenance:
+To remain a reliable reference, the repository will be regularly updated. This maintenance includes fixing bugs, improving documentation, and incorporating community feedback.
