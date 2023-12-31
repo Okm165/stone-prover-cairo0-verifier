@@ -22,8 +22,8 @@ Install the Cairo language by executing the following commands:
 ```bash
 cd cairo-lang
 pip install --upgrade pip
-zip -r cairo-lang-0.11.0.zip cairo-lang-0.11.0
-pip install cairo-lang-0.11.0.zip
+zip -r cairo-lang-0.12.0.zip cairo-lang-0.12.0
+pip install cairo-lang-0.12.0.zip
 cd ../
 ```
 
