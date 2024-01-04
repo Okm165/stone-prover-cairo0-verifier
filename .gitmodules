@@ -1,7 +1,7 @@
 [submodule "cairo-lang"]
 	path = cairo-lang
 	url = https://github.com/Okm165/cairo-lang.git
-	branch = 0.12.0_stone_proof_recursive_layout
+	branch = 0.12.0_simple_bootloader_starknet_with_keccak_layout
 [submodule "stone-prover"]
 	path = stone-prover
 	url = https://github.com/Okm165/stone-prover.git

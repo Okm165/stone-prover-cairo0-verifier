@@ -46,7 +46,7 @@ To generate a proof, follow these steps:
 
 ```bash
 cd stone-prover/e2e_test
-cairo-compile fibonacci.cairo --output fibonacci_compiled.json --proof_mode
+cairo-compile fibonacci.cairo --output fibonacci_compiled.json --proof_mode --no_debug_info
 cairo-run \
     --program=fibonacci_compiled.json \
     --layout=recursive \
@@ -80,6 +80,21 @@ cairo-run \
     --program_input=cairo_verifier_input.json \
     --trace_file=cairo_verifier_trace.json \
     --memory_file=cairo_verifier_memory.json \
+    --print_output
+cd ../
+```
+
+### Compile bootloader
+
+```bash
+cd cairo-lang
+cairo-compile --cairo_path=./src src/starkware/cairo/bootloaders/simple_bootloader/simple_bootloader.cairo --output simple_bootloader.json --no_debug_info
+cairo-run \
+    --program=simple_bootloader.json \
+    --layout=starknet_with_keccak \
+    --program_input=simple_bootloader_input.json \
+    --trace_file=simple_bootloader_trace.json \
+    --memory_file=simple_bootloader_memory.json \
     --print_output
 cd ../
 ```
