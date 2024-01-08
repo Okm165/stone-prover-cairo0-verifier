@@ -104,9 +104,19 @@ cairo-run \
     --program=simple_bootloader.json \
     --layout=starknet_with_keccak \
     --program_input=simple_bootloader_input.json \
+    --air_public_input=simple_bootloader_public_input.json \
+    --air_private_input=simple_bootloader_private_input.json \
     --trace_file=simple_bootloader_trace.json \
     --memory_file=simple_bootloader_memory.json \
-    --print_output
+    --print_output \
+    --proof_mode
+../stone-prover/e2e_test/cpu_air_prover \
+    --out_file=simple_bootloader.json \
+    --private_input_file=simple_bootloader_private_input.json \
+    --public_input_file=simple_bootloader_public_input.json \
+    --prover_config_file=cpu_air_prover_config.json \
+    --parameter_file=cpu_air_params.json \
+    -generate_annotations
 cd ../
 ```
 
