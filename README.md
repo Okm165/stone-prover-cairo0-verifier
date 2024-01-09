@@ -102,7 +102,7 @@ jq -n \
 cd cairo-lang
 cairo-run \
     --program=simple_bootloader.json \
-    --layout=starknet_with_keccak \
+    --layout=recursive \
     --program_input=simple_bootloader_input.json \
     --air_public_input=simple_bootloader_public_input.json \
     --air_private_input=simple_bootloader_private_input.json \
