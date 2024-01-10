@@ -120,11 +120,6 @@ cairo-run \
 cd ../
 ```
 
-
-
-
-
-
 ### Future Work and Enhancements
 
 #### Version Compatibility:
