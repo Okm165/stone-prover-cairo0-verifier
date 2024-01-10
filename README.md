@@ -111,7 +111,7 @@ cairo-run \
     --print_output \
     --proof_mode
 ../stone-prover/e2e_test/cpu_air_prover \
-    --out_file=simple_bootloader.json \
+    --out_file=simple_bootloader_proof.json \
     --private_input_file=simple_bootloader_private_input.json \
     --public_input_file=simple_bootloader_public_input.json \
     --prover_config_file=cpu_air_prover_config.json \
