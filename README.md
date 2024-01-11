@@ -59,6 +59,7 @@ cairo-run \
     --memory_file=fibonacci_memory.json \
     --print_output \
     --proof_mode
+
 ./cpu_air_prover \
     --out_file=fibonacci_proof.json \
     --private_input_file=fibonacci_private_input.json \
@@ -110,6 +111,45 @@ cairo-run \
     --memory_file=simple_bootloader_memory.json \
     --print_output \
     --proof_mode
+
+../stone-prover/e2e_test/cpu_air_prover \
+    --out_file=simple_bootloader_proof.json \
+    --private_input_file=simple_bootloader_private_input.json \
+    --public_input_file=simple_bootloader_public_input.json \
+    --prover_config_file=cpu_air_prover_config.json \
+    --parameter_file=cpu_air_params.json \
+    -generate_annotations
+cd ../
+```
+
+#### Run recursive step
+```bash
+# Define file paths
+verifier_program_file="cairo-lang/cairo_verifier.json"
+proof_file="cairo-lang/simple_bootloader_proof.json"
+recursion_program_file="stone-prover/e2e_test/fibonacci_compiled.json"
+simple_bootloader_input_tamplate="cairo-lang/simple_bootloader_input_tamplate.json"
+outputFile="cairo-lang/simple_bootloader_input.json"
+
+# Use jq to fill the template and save the result
+jq -n \
+    --argfile verifier_program "$verifier_program_file" \
+    --argfile proof "$proof_file" \
+    --argfile recursion_program "$recursion_program_file" \
+    -f "$simple_bootloader_input_tamplate" > "$outputFile"
+
+cd cairo-lang
+cairo-run \
+    --program=simple_bootloader.json \
+    --layout=recursive \
+    --program_input=simple_bootloader_input.json \
+    --air_public_input=simple_bootloader_public_input.json \
+    --air_private_input=simple_bootloader_private_input.json \
+    --trace_file=simple_bootloader_trace.json \
+    --memory_file=simple_bootloader_memory.json \
+    --print_output \
+    --proof_mode
+
 ../stone-prover/e2e_test/cpu_air_prover \
     --out_file=simple_bootloader_proof.json \
     --private_input_file=simple_bootloader_private_input.json \
