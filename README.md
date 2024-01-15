@@ -58,7 +58,8 @@ cairo-run \
     --trace_file=fibonacci_trace.json \
     --memory_file=fibonacci_memory.json \
     --print_output \
-    --proof_mode
+    --proof_mode \
+    --print_info
 
 ./cpu_air_prover \
     --out_file=fibonacci_proof.json \
@@ -110,7 +111,8 @@ cairo-run \
     --trace_file=simple_bootloader_trace.json \
     --memory_file=simple_bootloader_memory.json \
     --print_output \
-    --proof_mode
+    --proof_mode \
+    --print_info
 
 ../stone-prover/e2e_test/cpu_air_prover \
     --out_file=simple_bootloader_proof.json \
@@ -148,7 +150,8 @@ cairo-run \
     --trace_file=simple_bootloader_trace.json \
     --memory_file=simple_bootloader_memory.json \
     --print_output \
-    --proof_mode
+    --proof_mode \
+    --print_info
 
 ../stone-prover/e2e_test/cpu_air_prover \
     --out_file=simple_bootloader_proof.json \
