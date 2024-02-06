@@ -14,7 +14,7 @@ To get started, clone this repository and initialize its submodules:
 git clone https://github.com/Okm165/stone-prover-cairo0-verifier.git
 cd stone-prover-cairo0-verifier
 git submodule update --init --recursive
-git checkout --recurse-submodules keccak_hash
+git checkout --recurse-submodules starknet_with_keccak_layout_keccak_native
 ```
 
 ### Install Cairo Lang
