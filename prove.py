@@ -12,27 +12,24 @@ def log_and_run(commands, description, cwd=None):
         print(f"{Fore.RED}Error running command '{full_command}': {e}\n{Style.RESET_ALL}")
 
 log_and_run([
-    "cairo-compile fibonacci.cairo --output fibonacci_compiled.json --proof_mode", 
-], "Compiling fibonacci program", cwd="stone-prover/e2e_test")
-
-log_and_run([
     "cairo-run \
-    --program=fibonacci_compiled.json \
-    --layout=recursive \
-    --program_input=fibonacci_input.json \
-    --air_public_input=fibonacci_public_input.json \
-    --air_private_input=fibonacci_private_input.json \
-    --trace_file=fibonacci_trace.json \
-    --memory_file=fibonacci_memory.json \
+    --program=program_compiled.json \
+    --layout=starknet_with_keccak \
+    --program_input=program_input.json \
+    --air_public_input=public_input.json \
+    --air_private_input=private_input.json \
+    --trace_file=trace.json \
+    --memory_file=memory.json \
     --print_output \
+    --print_info \
     --proof_mode", 
-], "Running fibonacci program", cwd="stone-prover/e2e_test")
+], "Running program", cwd="stone-prover/e2e_test")
 
 log_and_run([
     "./cpu_air_prover \
-    --out_file=fibonacci_proof.json \
-    --private_input_file=fibonacci_private_input.json \
-    --public_input_file=fibonacci_public_input.json \
+    --out_file=proof.json \
+    --private_input_file=private_input.json \
+    --public_input_file=public_input.json \
     --prover_config_file=cpu_air_prover_config.json \
     --parameter_file=cpu_air_params.json \
     -generate_annotations", 
