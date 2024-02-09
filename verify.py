@@ -21,7 +21,7 @@ log_and_run([
 
 # we run erifier in starknet_with_keccak layout to enable keccak during verification
 log_and_run([
-    "cairo-run \
+    "time cairo-run \
     --program=cairo_verifier.json \
     --layout=starknet_with_keccak \
     --program_input=cairo_verifier_input.json \

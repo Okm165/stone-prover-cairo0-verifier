@@ -16,7 +16,7 @@ log_and_run([
 ], "Compiling fibonacci program", cwd="stone-prover/e2e_test")
 
 log_and_run([
-    "cairo-run \
+    "time cairo-run \
     --program=fibonacci_compiled.json \
     --layout=recursive \
     --program_input=fibonacci_input.json \
@@ -30,7 +30,7 @@ log_and_run([
 ], "Running fibonacci program", cwd="stone-prover/e2e_test")
 
 log_and_run([
-    "./cpu_air_prover \
+    "time ./cpu_air_prover \
     --out_file=fibonacci_proof.json \
     --private_input_file=fibonacci_private_input.json \
     --public_input_file=fibonacci_public_input.json \
