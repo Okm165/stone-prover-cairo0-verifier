@@ -16,7 +16,7 @@ log_and_run([
 ], "Preparing input", cwd="cairo-lang")
 
 log_and_run([
-    "cairo-compile --cairo_path=./src src/starkware/cairo/cairo_verifier/layouts/all_cairo/cairo_verifier.cairo --output cairo_verifier.json --no_debug_info", 
+    "cairo-compile --cairo_path=./src src/starkware/cairo/cairo_verifier/layouts/all_cairo/cairo_verifier.cairo --output cairo_verifier.json --no_debug_info --proof_mode", 
 ], "Compiling verifier program", cwd="cairo-lang")
 
 # we run erifier in starknet_with_keccak layout to enable keccak during verification
@@ -27,6 +27,9 @@ log_and_run([
     --program_input=cairo_verifier_input.json \
     --trace_file=cairo_verifier_trace.json \
     --memory_file=cairo_verifier_memory.json \
+    --air_public_input=cairo_verifier_public_input.json \
+    --air_private_input=cairo_verifier_private_input.json \
     --print_info \
+    --proof_mode \
     --print_output", 
 ], "Running verifier program", cwd="cairo-lang")

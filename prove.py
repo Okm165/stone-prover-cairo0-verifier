@@ -25,6 +25,7 @@ log_and_run([
     --trace_file=fibonacci_trace.json \
     --memory_file=fibonacci_memory.json \
     --print_output \
+    --print_info \
     --proof_mode", 
 ], "Running fibonacci program", cwd="stone-prover/e2e_test")
 
