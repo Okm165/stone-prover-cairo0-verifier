@@ -23,7 +23,7 @@ log_and_run([
 ], "Preapring bootloader-bridge input", cwd=".")
 
 log_and_run([
-    "cairo-run \
+    "time cairo-run \
     --program=simple_bootloader.json \
     --layout=recursive \
     --program_input=simple_bootloader_input.json \
@@ -36,12 +36,12 @@ log_and_run([
     --print_info"
 ], "Running bootloader-bridge step", cwd="cairo-lang")
 
-# log_and_run([
-#     "./cpu_air_prover \
-#     --out_file=bootloader_proof.json \
-#     --public_input_file=../../cairo-lang/simple_bootloader_public_input.json \
-#     --private_input_file=../../cairo-lang/simple_bootloader_private_input.json \
-#     --prover_config_file=cpu_air_prover_config.json \
-#     --parameter_file=cpu_air_params.json \
-#     -generate_annotations", 
-# ], "Proving verifer program in recursive layout", cwd="stone-prover/bootloader")
+log_and_run([
+    "time ./cpu_air_prover \
+    --out_file=bootloader_proof.json \
+    --public_input_file=../../cairo-lang/simple_bootloader_public_input.json \
+    --private_input_file=../../cairo-lang/simple_bootloader_private_input.json \
+    --prover_config_file=cpu_air_prover_config.json \
+    --parameter_file=cpu_air_params.json \
+    -generate_annotations", 
+], "Proving verifer program in recursive layout", cwd="stone-prover/bootloader")
