@@ -12,25 +12,25 @@ def log_and_run(commands, description, cwd=None):
         print(f"{Fore.RED}Error running command '{full_command}': {e}\n{Style.RESET_ALL}")
 
 log_and_run([
-    "cairo-run \
-    --program=program_compiled.json \
+    "time cairo-run \
+    --program=zerosync_compiled.json \
     --layout=starknet_with_keccak \
-    --program_input=program_input.json \
-    --air_public_input=public_input.json \
-    --air_private_input=private_input.json \
-    --trace_file=trace.json \
-    --memory_file=memory.json \
+    --program_input=zerosync_input.json \
+    --air_public_input=zerosync_public_input.json \
+    --air_private_input=zerosync_private_input.json \
+    --trace_file=zerosync_trace.bin \
+    --memory_file=zerosync_memory.bin \
     --print_output \
     --print_info \
     --proof_mode", 
-], "Running program", cwd="stone-prover/e2e_test")
+], "Running zerosync program", cwd="stone-prover/e2e_test")
 
 log_and_run([
-    "./cpu_air_prover \
-    --out_file=proof.json \
-    --private_input_file=private_input.json \
-    --public_input_file=public_input.json \
+    "time ./cpu_air_prover \
+    --out_file=zerosync_proof.json \
+    --public_input_file=zerosync_public_input.json \
+    --private_input_file=zerosync_private_input.json \
     --prover_config_file=cpu_air_prover_config.json \
     --parameter_file=cpu_air_params.json \
     -generate_annotations", 
-], "Proving fibonacci program", cwd="stone-prover/e2e_test")
+], "Proving zerosync program", cwd="stone-prover/e2e_test")

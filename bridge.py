@@ -12,15 +12,11 @@ def log_and_run(commands, description, cwd=None):
         print(f"{Fore.RED}Error running command '{full_command}': {e}\n{Style.RESET_ALL}")
 
 log_and_run([
-    "jq '{ proof: . }' ../stone-prover/e2e_test/proof.json > cairo_verifier_input.json", 
-], "Preparing input", cwd="cairo-lang")
+    "jq '{ proof: . }' ../stone-prover/e2e_test/zerosync_proof.json > cairo_verifier_input.json", 
+], "Preparing cairo_verifier input", cwd="cairo-lang")
 
 log_and_run([
-    "cairo-compile --cairo_path=./src src/starkware/cairo/cairo_verifier/layouts/all_cairo/cairo_verifier.cairo --output cairo_verifier.json --no_debug_info --proof_mode", 
-], "Compiling verifier program", cwd="cairo-lang")
-
-log_and_run([
-    "cairo-run \
+    "time cairo-run \
     --program=cairo_verifier.json \
     --layout=recursive \
     --program_input=cairo_verifier_input.json \
@@ -31,14 +27,4 @@ log_and_run([
     --print_info \
     --proof_mode \
     --print_output",
-], "Running verifier program", cwd="cairo-lang")
-
-# log_and_run([
-#     "./cpu_air_prover \
-#     --out_file=proof.json \
-#     --private_input_file=../../cairo-lang/cairo_verifier_private_input.json \
-#     --public_input_file=../../cairo-lang/cairo_verifier_public_input.json \
-#     --prover_config_file=cpu_air_prover_config.json \
-#     --parameter_file=cpu_air_params.json \
-#     -generate_annotations", 
-# ], "Proving verifer program in recursive layout", cwd="stone-prover/bridge")
+], "Running cairo_verifier program", cwd="cairo-lang")

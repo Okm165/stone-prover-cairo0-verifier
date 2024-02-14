@@ -12,19 +12,9 @@ def log_and_run(commands, description, cwd=None):
         print(f"{Fore.RED}Error running command '{full_command}': {e}\n{Style.RESET_ALL}")
 
 log_and_run([
-    "jq '{ proof: . }' ../stone-prover/e2e_test/proof.json > cairo_verifier_input.json", 
-], "Preparing input", cwd="cairo-lang")
-
-log_and_run([
-    "cairo-compile --cairo_path=./src src/starkware/cairo/cairo_verifier/layouts/all_cairo/cairo_verifier.cairo --output cairo_verifier.json --no_debug_info", 
+    "cairo-compile --cairo_path=./src src/starkware/cairo/cairo_verifier/layouts/all_cairo/cairo_verifier.cairo --output cairo_verifier.json --no_debug_info --proof_mode", 
 ], "Compiling verifier program", cwd="cairo-lang")
 
 log_and_run([
-    "cairo-run \
-    --program=cairo_verifier.json \
-    --layout=recursive \
-    --program_input=cairo_verifier_input.json \
-    --trace_file=cairo_verifier_trace.json \
-    --memory_file=cairo_verifier_memory.json \
-    --print_output", 
-], "Running verifier program", cwd="cairo-lang")
+    "cairo-compile --cairo_path=./src src/starkware/cairo/bootloaders/simple_bootloader/simple_bootloader.cairo --output simple_bootloader.json --no_debug_info --proof_mode", 
+], "Compiling simple bootloader program", cwd="cairo-lang")
