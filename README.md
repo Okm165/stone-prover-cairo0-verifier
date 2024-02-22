@@ -44,9 +44,6 @@ cd ../
 cargo install hyperfine
 ```
 
-### Fetch recursive_layout branch
-
-
 ### Running Benchmarks
 To run the benchmarks first ensure you are on the correct branch with the corresponding layout for the program (this is needed the cairo verifier changes dependent on the layout).
 
