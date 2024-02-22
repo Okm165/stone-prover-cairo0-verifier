@@ -1,0 +1,291 @@
+{
+    "trace_path": "/home/ubuntu/stone-prover-cairo0-verifier/keccak_builtin/trace.json",
+    "memory_path": "/home/ubuntu/stone-prover-cairo0-verifier/keccak_builtin/memory.json",
+    "pedersen": [],
+    "range_check": [
+        {
+            "index": 0,
+            "value": "0x6"
+        },
+        {
+            "index": 1,
+            "value": "0x0"
+        },
+        {
+            "index": 2,
+            "value": "0x800000000000010ffffffffffffffff"
+        },
+        {
+            "index": 3,
+            "value": "0x4"
+        },
+        {
+            "index": 4,
+            "value": "0x0"
+        },
+        {
+            "index": 5,
+            "value": "0xfffffffffffffffffffffffffffffff8"
+        },
+        {
+            "index": 6,
+            "value": "0xfffffffffffffffffffffffffffffff3"
+        },
+        {
+            "index": 7,
+            "value": "0x6"
+        },
+        {
+            "index": 8,
+            "value": "0xffffffffffffffff0000000000000006"
+        },
+        {
+            "index": 9,
+            "value": "0x0"
+        },
+        {
+            "index": 10,
+            "value": "0xffffffffffffffff0000000000000000"
+        },
+        {
+            "index": 11,
+            "value": "0x0"
+        },
+        {
+            "index": 12,
+            "value": "0xffffffffffffffff0000000000000000"
+        },
+        {
+            "index": 13,
+            "value": "0x0"
+        },
+        {
+            "index": 14,
+            "value": "0x0"
+        },
+        {
+            "index": 15,
+            "value": "0xffffffffffffffffffffffffffffff00"
+        },
+        {
+            "index": 16,
+            "value": "0xffffffffffffffffff00000000000000"
+        },
+        {
+            "index": 17,
+            "value": "0x1"
+        },
+        {
+            "index": 18,
+            "value": "0xffffffffffffffff0000000000000001"
+        },
+        {
+            "index": 19,
+            "value": "0x0"
+        },
+        {
+            "index": 20,
+            "value": "0xffffffffffffffff0000000000000000"
+        },
+        {
+            "index": 21,
+            "value": "0x0"
+        },
+        {
+            "index": 22,
+            "value": "0x0"
+        },
+        {
+            "index": 23,
+            "value": "0xffffffffffffffffffffffffffff0000"
+        },
+        {
+            "index": 24,
+            "value": "0xffffffffffffffffffff000000000000"
+        },
+        {
+            "index": 25,
+            "value": "0x0"
+        },
+        {
+            "index": 26,
+            "value": "0xffffffffffffffff0000000000000000"
+        },
+        {
+            "index": 27,
+            "value": "0x0"
+        },
+        {
+            "index": 28,
+            "value": "0xffffffffffffffff0000000000000000"
+        },
+        {
+            "index": 29,
+            "value": "0x0"
+        },
+        {
+            "index": 30,
+            "value": "0x0"
+        },
+        {
+            "index": 31,
+            "value": "0xffffffffffffffffffffffffff000000"
+        },
+        {
+            "index": 32,
+            "value": "0xffffffffffffffffffffff0000000000"
+        },
+        {
+            "index": 33,
+            "value": "0x0"
+        },
+        {
+            "index": 34,
+            "value": "0xffffffffffffffff0000000000000000"
+        },
+        {
+            "index": 35,
+            "value": "0x0"
+        },
+        {
+            "index": 36,
+            "value": "0xffffffffffffffff0000000000000000"
+        },
+        {
+            "index": 37,
+            "value": "0x0"
+        },
+        {
+            "index": 38,
+            "value": "0x0"
+        },
+        {
+            "index": 39,
+            "value": "0xffffffffffffffffffffffff00000000"
+        },
+        {
+            "index": 40,
+            "value": "0xffffffffffffffffffffffff00000000"
+        },
+        {
+            "index": 41,
+            "value": "0x0"
+        },
+        {
+            "index": 42,
+            "value": "0xffffffffffffffff0000000000000000"
+        },
+        {
+            "index": 43,
+            "value": "0x0"
+        },
+        {
+            "index": 44,
+            "value": "0xffffffffffffffff0000000000000000"
+        },
+        {
+            "index": 45,
+            "value": "0x0"
+        },
+        {
+            "index": 46,
+            "value": "0x0"
+        },
+        {
+            "index": 47,
+            "value": "0xffffffffffffffffffffff0000000000"
+        },
+        {
+            "index": 48,
+            "value": "0xffffffffffffffffffffffffff000000"
+        },
+        {
+            "index": 49,
+            "value": "0x8000000000000000"
+        },
+        {
+            "index": 50,
+            "value": "0xffffffffffffffff8000000000000000"
+        },
+        {
+            "index": 51,
+            "value": "0x12d6e0dffbb847cef8ef8b9e7eccf0f9"
+        },
+        {
+            "index": 52,
+            "value": "0x54b2b3ec50ec8d6e8"
+        },
+        {
+            "index": 53,
+            "value": "0xffffffffffffff054b2b3ec50ec8d6e8"
+        },
+        {
+            "index": 54,
+            "value": "0xe3815c3666251c"
+        },
+        {
+            "index": 55,
+            "value": "0xfa7afb3b7824623ddbe6ee0c1ff2ef82"
+        },
+        {
+            "index": 56,
+            "value": "0xbdc3"
+        },
+        {
+            "index": 57,
+            "value": "0xffffffffffffffffffe3815c3666251c"
+        },
+        {
+            "index": 58,
+            "value": "0xffffffffffffffffffffffffffffbdc3"
+        }
+    ],
+    "ecdsa": [],
+    "bitwise": [
+        {
+            "index": 0,
+            "x": "0x6",
+            "y": "0x0"
+        },
+        {
+            "index": 1,
+            "x": "0x100000000000000",
+            "y": "0x0"
+        },
+        {
+            "index": 2,
+            "x": "0x0",
+            "y": "0x0"
+        },
+        {
+            "index": 3,
+            "x": "0x0",
+            "y": "0x0"
+        },
+        {
+            "index": 4,
+            "x": "0x0",
+            "y": "0x0"
+        },
+        {
+            "index": 5,
+            "x": "0x8000000000000000000000",
+            "y": "0x0"
+        }
+    ],
+    "ec_op": [],
+    "keccak": [
+        {
+            "index": 0,
+            "input_s0": "0x6",
+            "input_s1": "0x100000000000000",
+            "input_s2": "0x0",
+            "input_s3": "0x0",
+            "input_s4": "0x0",
+            "input_s5": "0x8000000000000000000000",
+            "input_s6": "0x0",
+            "input_s7": "0x0"
+        }
+    ],
+    "poseidon": []
+}
