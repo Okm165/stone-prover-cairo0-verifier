@@ -39,6 +39,37 @@ docker cp -L ${container_id}:/bin/cpu_air_verifier ./e2e_test
 cd ../
 ```
 
+### Install Hyperfine
+```bash
+cargo install hyperfine
+```
+
+### Fetch recursive_layout branch
+
+
+### Running Benchmarks
+To run the benchmarks first ensure you are on the correct branch with the corresponding layout for the program (this is needed the cairo verifier changes dependent on the layout).
+
+-	keccak_builtin_bench.sh -> origin/master
+-	keccak_bench.sh -> origin/recursive_layout
+-	SOON! sha256_bench.sh -> origin/recursive_layout
+
+Input options indicate the number of bytes being hashed:
+```bash
+{INPUT} = { 32, 320, 3200, 32000 }
+```
+
+Keccak (In cairo)
+```bash
+chmod +x keccak_bench.sh
+./keccak_bench.sh {INPUT}
+```
+
+Keccak Builtin
+```bash
+chmod +x keccak_builtin_bench.sh
+./keccak_builtin_bench.sh {INPUT}
+```
 ## Usage
 
 ### Generate Proof
