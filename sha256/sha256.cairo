@@ -1,7 +1,5 @@
 %builtins output pedersen range_check bitwise
 
-from starkware.cairo.common.alloc import alloc
-from starkware.cairo.common.cairo_builtins import BitwiseBuiltin
 from starkware.cairo.common.cairo_builtins import BitwiseBuiltin
 from starkware.cairo.common.alloc import alloc
 from starkware.cairo.common.registers import get_fp_and_pc
@@ -9,47 +7,10 @@ from starkware.cairo.common.memcpy import memcpy
 from starkware.cairo.common.memset import memset
 from starkware.cairo.common.math import unsigned_div_rem
 
-
-func main {
-	   output_ptr: felt, pedersen_ptr: felt, range_check_ptr: felt, bitwise_ptr: BitwiseBuiltin*, 
-} () {
-    alloc_locals;
-    // Fetch data from public inputs this is an unconstrained hinted operation that loads all data from *_public_input.json, allocates a new data segment and copies it into it.
-    local data_len; // Number of elements to hash
-    local data_ptr: felt*;
-    %{
-         ids.data_len = program_input['data_len']
-
-         data = program_input['data']
-         
-         ids.data_ptr = data_ptr = segments.add()
-         for i, val in enumerate(data):
-             memory[data_ptr + i] = val
-    %}
-    let (sha256_ptr: felt*) = alloc();
-    local sha256_ptr_start: felt* = sha256_ptr;
-    
-    let val = sha256_felts{range_check_ptr=range_check_ptr, bitwise_ptr=bitwise_ptr, keccak_ptr=sha256_ptr}(data_len, data_ptr);
-
-    finalize_hash256_block(keccak_ptr_start=keccak_ptr_start, keccak_ptr_end=keccak_ptr);
-
-    return ();
-}
-
-func sha256_felts{range_check_ptr=, bitwise_ptr: BitwiseBuiltin*, sha256_ptr: felt*}(element: felt*, n_elements) {
-   alloc_locals;
-   with sha256_ptr {
-     let hash 
-   }
-
-}
-
-//Shout out to the team at Zerosync for creating this sha256 implementation in cairo I adapted
-from utils.utils import UINT32_SIZE
-
+// HASH SHA-256
 const SHA256_CHUNK_FELT_SIZE = 16;
 
-const HASH256_INSTANCE_FELT_SIZE = 2 * SHA256_CHUNK_FELT_SIZE + Hash256.SIZE;
+const HASH256_INSTANCE_FELT_SIZE = SHA256_CHUNK_FELT_SIZE + Hash256.SIZE;
 
 struct Hash256 {
     word_0: felt,
@@ -62,36 +23,114 @@ struct Hash256 {
     word_7: felt,
 }
 
-func hash256_felt{range_check_ptr, hash256_ptr: felt*}(element: felt*) -> felt* {
+
+// SHA-256 PACKED
+const BLOCK_SIZE = 7;
+const ALL_ONES = 2 ** 251 - 1;
+// Pack the different instances with offsets of 35 bits. This is the maximal possible offset for
+// 7 32-bit words and it allows space for carry bits in integer addition operations (up to
+// 8 summands).
+const SHIFTS = 1 + 2 ** 35 + 2 ** (35 * 2) + 2 ** (35 * 3) + 2 ** (35 * 4) + 2 ** (35 * 5) +
+    2 ** (35 * 6);
+
+func main{output_ptr: felt, pedersen_ptr: felt, range_check_ptr: felt, bitwise_ptr: BitwiseBuiltin*}() {
+    alloc_locals;
+    
+    // initialize hash256_ptr
+    local data_len; // Number of elements to hash
+    local data_ptr: felt*; // Pointer to start of data
+    %{
+         ids.data_len = program_input['data_len']
+
+         data = program_input['data']
+         
+         ids.data_ptr = data_ptr = segments.add()
+         for i, val in enumerate(data):
+             memory[data_ptr + i] = val
+    %}
+
+    // Number of hash blocks needed to hash data
+    let (num_data_blocks, _) = unsigned_div_rem(data_len, SHA256_CHUNK_FELT_SIZE);
+
+    let (hash256_ptr: felt*) = alloc();
+    let hash256_ptr_start = hash256_ptr;
+
+    with hash256_ptr {
+        let hash = _hash256_loop(data_ptr, num_data_blocks);
+    }
+
+    // finalize hash256_ptr
+    finalize_hash256(hash256_ptr_start, hash256_ptr);
+    
+    return ();
+}
+
+func _hash256_loop{
+    range_check_ptr, bitwise_ptr: BitwiseBuiltin*, hash256_ptr: felt*
+}(data_ptr: felt*, n) {
+    if (n == 0) {
+        return ();
+    }
+
     alloc_locals;
 
-    let chunk_0 = hash256_ptr;
-    memcpy(hash256_ptr, block_header, BLOCK_HEADER_FELT_SIZE);
-    let hash256_ptr = hash256_ptr + BLOCK_HEADER_FELT_SIZE;
+    with hash256_ptr {
+        let block_hash = hash256(data_ptr);
+    }
 
-    let chunk_1 = hash256_ptr + SHA256_CHUNK_FELT_SIZE - BLOCK_HEADER_FELT_SIZE;
-    assert hash256_ptr[0] = 0x80000000;
-    memset(hash256_ptr + 1, 0, 10);
-    assert hash256_ptr[11] = 8 * BLOCK_HEADER_SIZE;
-    let hash256_ptr = hash256_ptr + 2 * SHA256_CHUNK_FELT_SIZE - BLOCK_HEADER_FELT_SIZE;
+    //increment data pointer by chunk size
+    data_ptr = data_ptr + SHA256_CHUNK_FELT_SIZE;
 
+    return _hash256_loop(data_ptr, n - 1);
+}
+
+func hash256{range_check_ptr, hash256_ptr: felt*}(data_ptr: felt*) -> felt* {
+    alloc_locals;
+
+    let chunk = hash256_ptr;
+    memcpy(hash256_ptr, data_ptr, SHA256_CHUNK_FELT_SIZE);
+
+    let hash256_ptr = hash256_ptr + SHA256_CHUNK_FELT_SIZE;
     let hash256 = hash256_ptr;
     %{
         from starkware.cairo.common.cairo_sha256.sha256_utils import (
             IV, compute_message_schedule, sha2_compress_function)
-        
-        w = compute_message_schedule(memory.get_range(ids.chunk_0, ids.SHA256_CHUNK_FELT_SIZE))
-        tmp = sha2_compress_function(IV, w)
-        w = compute_message_schedule(memory.get_range(ids.chunk_1, ids.SHA256_CHUNK_FELT_SIZE))
-        sha256 = sha2_compress_function(tmp, w)
-        sha256 += [0x80000000] + 6 * [0] + [256]
-        w = compute_message_schedule(sha256)
+        w = compute_message_schedule(memory.get_range(ids.chunk, ids.SHA256_CHUNK_FELT_SIZE))
         hash256 = sha2_compress_function(IV, w)
         segments.write_arg(ids.hash256_ptr, hash256)
     %}
     let hash256_ptr = hash256_ptr + Hash256.SIZE;
     
+    //TODO: remove this as we are not constraining the hash.
     return hash256;
+}
+
+func finalize_hash256{range_check_ptr, bitwise_ptr: BitwiseBuiltin*}(hash256_ptr_start: felt*, hash256_ptr_end: felt*) {
+    alloc_locals;
+
+    let round_constants = get_round_constants();
+
+    let initial_state = get_initial_state();    
+
+    // We reuse the output state of the previous chunk as input to the next.
+    tempvar num_instances = (hash256_ptr_end - hash256_ptr_start) / HASH256_INSTANCE_FELT_SIZE;
+    if (num_instances == 0) {
+        return ();
+    }
+    
+    %{
+        # Copy last hash256 instance as padding
+        hash256 = memory.get_range(ids.hash256_ptr_end - ids.HASH256_INSTANCE_FELT_SIZE,
+                                                         ids.HASH256_INSTANCE_FELT_SIZE)
+        segments.write_arg(ids.hash256_ptr_end, (ids.BLOCK_SIZE - 1) * hash256)
+    %}
+
+    // Compute the amount of blocks (rounded up).
+    let (num_instance_blocks, _) = unsigned_div_rem(num_instances + BLOCK_SIZE - 1, BLOCK_SIZE);
+
+    _finalize_hash256_inner(hash256_ptr_start, num_instance_blocks, initial_state, round_constants);
+
+    return ();
 }
 
 func _finalize_hash256_inner{range_check_ptr, bitwise_ptr: BitwiseBuiltin*}(hash256_ptr: felt*, n: felt, initial_state: felt*, round_constants: felt*) {
@@ -151,71 +190,7 @@ func _finalize_hash256_inner{range_check_ptr, bitwise_ptr: BitwiseBuiltin*}(hash
     local range_check_ptr = range_check_ptr;
     compute_message_schedule(message_start);
     
-    let chunk_0_state = sha2_compress(initial_state, message_start, round_constants);
-    local bitwise_ptr: BitwiseBuiltin* = bitwise_ptr;
-
-    let (local message_start: felt*) = alloc();
-
-    // Handle message.
-
-    tempvar message = message_start;
-    tempvar hash256_ptr = hash256_ptr;
-    tempvar range_check_ptr = range_check_ptr;
-    tempvar m = SHA256_CHUNK_FELT_SIZE;
-
-    message_loop_2:
-        tempvar x0 = hash256_ptr[0 * HASH256_INSTANCE_FELT_SIZE];
-        assert [range_check_ptr + 0] = x0;
-        assert [range_check_ptr + 1] = MAX_VALUE - x0;
-        tempvar x1 = hash256_ptr[1 * HASH256_INSTANCE_FELT_SIZE];
-        assert [range_check_ptr + 2] = x1;
-        assert [range_check_ptr + 3] = MAX_VALUE - x1;
-        tempvar x2 = hash256_ptr[2 * HASH256_INSTANCE_FELT_SIZE];
-        assert [range_check_ptr + 4] = x2;
-        assert [range_check_ptr + 5] = MAX_VALUE - x2;
-        tempvar x3 = hash256_ptr[3 * HASH256_INSTANCE_FELT_SIZE];
-        assert [range_check_ptr + 6] = x3;
-        assert [range_check_ptr + 7] = MAX_VALUE - x3;
-        tempvar x4 = hash256_ptr[4 * HASH256_INSTANCE_FELT_SIZE];
-        assert [range_check_ptr + 8] = x4;
-        assert [range_check_ptr + 9] = MAX_VALUE - x4;
-        tempvar x5 = hash256_ptr[5 * HASH256_INSTANCE_FELT_SIZE];
-        assert [range_check_ptr + 10] = x5;
-        assert [range_check_ptr + 11] = MAX_VALUE - x5;
-        tempvar x6 = hash256_ptr[6 * HASH256_INSTANCE_FELT_SIZE];
-        assert [range_check_ptr + 12] = x6;
-        assert [range_check_ptr + 13] = MAX_VALUE - x6;
-        assert [message] = x0 + 2 ** (35 * 1) * x1 + 2 ** (35 * 2) * x2 + 2 ** (35 * 3) * x3 +
-                                2 ** (35 * 4) * x4 + 2 ** (35 * 5) * x5 + 2 ** (35 * 6) * x6;
-
-        tempvar message = message + 1;
-        tempvar hash256_ptr = hash256_ptr + 1;
-        tempvar range_check_ptr = range_check_ptr + 14;
-        tempvar m = m - 1;
-        jmp message_loop_2 if m != 0;
-
-    // Run hash256 on the 7 instances.
-   
-    local hash256_ptr: felt* = hash256_ptr;
-    local range_check_ptr = range_check_ptr;
-    compute_message_schedule(message_start);
-    
-    let chunk_1_state = sha2_compress(chunk_0_state, message_start, round_constants);
-    local bitwise_ptr: BitwiseBuiltin* = bitwise_ptr;
-
-    // Handle message.
-
-    assert chunk_1_state[Hash256.SIZE] = SHIFTS * 0x80000000;
-    memset(chunk_1_state + Hash256.SIZE + 1, 0, 6);
-    assert chunk_1_state[Hash256.SIZE + 7] = SHIFTS * 32 * Hash256.SIZE;
-
-    // Run hash256 on the 7 instances.
-    
-    local hash256_ptr: felt* = hash256_ptr;
-    local range_check_ptr = range_check_ptr;
-    compute_message_schedule(chunk_1_state);
-
-    let outputs = sha2_compress(initial_state, chunk_1_state, round_constants);
+    let outputs = sha2_compress(initial_state, message_start, round_constants);
     local bitwise_ptr: BitwiseBuiltin* = bitwise_ptr;
     
     // Handle outputs.
@@ -259,34 +234,6 @@ func _finalize_hash256_inner{range_check_ptr, bitwise_ptr: BitwiseBuiltin*}(hash
     return _finalize_hash256_inner(hash256_start + HASH256_INSTANCE_FELT_SIZE * BLOCK_SIZE, n - 1, initial_state, round_constants);
 }
 
-func finalize_hash256{range_check_ptr, bitwise_ptr: BitwiseBuiltin*}(hash256_ptr_start: felt*, hash256_ptr_end: felt*) {
-    alloc_locals;
-
-    let round_constants = get_round_constants();
-
-    let initial_state = get_initial_state();    
-
-    // We reuse the output state of the previous chunk as input to the next.
-    tempvar num_instances = (hash256_ptr_end - hash256_ptr_start) / HASH256_INSTANCE_FELT_SIZE;
-    if (num_instances == 0) {
-        return ();
-    }
-    
-    %{
-        # Copy last hash256 instance as padding
-        hash256 = memory.get_range(ids.hash256_ptr_end - ids.HASH256_INSTANCE_FELT_SIZE,
-                                                         ids.HASH256_INSTANCE_FELT_SIZE)
-        segments.write_arg(ids.hash256_ptr_end, (ids.BLOCK_SIZE - 1) * hash256)
-    %}
-
-    // Compute the amount of blocks (rounded up).
-    let (num_instance_blocks, _) = unsigned_div_rem(num_instances + BLOCK_SIZE - 1, BLOCK_SIZE);
-
-    _finalize_hash256_inner(hash256_ptr_start, num_instance_blocks, initial_state, round_constants);
-
-    return ();
-}
-
 const INITIAL_STATE_H0 = SHIFTS * 0x6A09E667;
 const INITIAL_STATE_H1 = SHIFTS * 0xBB67AE85;
 const INITIAL_STATE_H2 = SHIFTS * 0x3C6EF372;
@@ -312,15 +259,6 @@ func get_initial_state{range_check_ptr}() -> felt* {
 
     return &initial_state;
 }
-
-
-const BLOCK_SIZE = 7;
-const ALL_ONES = 2 ** 251 - 1;
-// Pack the different instances with offsets of 35 bits. This is the maximal possible offset for
-// 7 32-bit words and it allows space for carry bits in integer addition operations (up to
-// 8 summands).
-const SHIFTS = 1 + 2 ** 35 + 2 ** (35 * 2) + 2 ** (35 * 3) + 2 ** (35 * 4) + 2 ** (35 * 5) +
-    2 ** (35 * 6);
 
 // Given an array of size 16, extends it to the message schedule array (of size 64) by writing
 // 48 more values.
