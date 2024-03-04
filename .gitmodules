@@ -5,4 +5,4 @@
 [submodule "stone-prover"]
 	path = stone-prover
 	url = https://github.com/Okm165/stone-prover.git
-	branch = cairo0_recursive
+	branch = cairo0_recursive_stone5
