@@ -22,7 +22,7 @@ log_and_run([
 log_and_run([
     "cairo-run \
     --program=cairo_verifier.json \
-    --layout=recursive \
+    --layout=recursive_with_poseidon \
     --program_input=cairo_verifier_input.json \
     --trace_file=cairo_verifier_trace.json \
     --memory_file=cairo_verifier_memory.json \
