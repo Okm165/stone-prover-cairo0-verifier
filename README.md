@@ -16,7 +16,7 @@ To get started, clone this repository and initialize its submodules:
 git clone https://github.com/Okm165/stone-prover-cairo0-verifier.git
 cd stone-prover-cairo0-verifier
 git submodule update --init --recursive
-git checkout --recurse-submodules recursive_poc
+git checkout --recurse-submodules recursive_poc_poseidon
 ```
 
 ### Setup env
