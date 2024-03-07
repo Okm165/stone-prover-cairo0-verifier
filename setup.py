@@ -14,7 +14,8 @@ def log_and_run(commands, description, cwd=None):
 log_and_run([
     "pip install --upgrade pip", 
     "zip -r cairo-lang-0.12.0.zip cairo-lang-0.12.0", 
-    "pip install cairo-lang-0.12.0.zip"
+    "pip install cairo-lang-0.12.0.zip",
+    "pip install aiofiles"
 ], "Installing cairo-lang", cwd="cairo-lang")
 
 log_and_run([
