@@ -18,7 +18,7 @@ log_and_run([
 log_and_run([
     "cairo-run \
     --program=fibonacci_compiled.json \
-    --layout=recursive \
+    --layout=starknet_with_keccak \
     --program_input=fibonacci_input.json \
     --air_public_input=fibonacci_public_input.json \
     --air_private_input=fibonacci_private_input.json \
