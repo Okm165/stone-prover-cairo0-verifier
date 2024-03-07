@@ -1,8 +1,8 @@
 [submodule "cairo-lang"]
 	path = cairo-lang
 	url = https://github.com/Okm165/cairo-lang.git
-	branch = recursive_poc
+	branch = recursive_poc_poseidon
 [submodule "stone-prover"]
 	path = stone-prover
 	url = https://github.com/Okm165/stone-prover.git
-	branch = cairo0_recursive
+	branch = recursive_poc_poseidon

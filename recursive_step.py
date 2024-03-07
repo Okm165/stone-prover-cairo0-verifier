@@ -12,22 +12,17 @@ def log_and_run(commands, description, cwd=None):
         print(f"{Fore.RED}Error running command '{full_command}': {e}\n{Style.RESET_ALL}")
 
 log_and_run([
-    'verifier_program_file="cairo-lang/cairo_verifier.json"', 
-    'proof_file="cairo-lang/simple_bootloader_proof.json"',
-    'recursion_program_file="stone-prover/e2e_test/fibonacci_compiled.json"',
-    'simple_bootloader_input_tamplate="cairo-lang/simple_bootloader_input_tamplate.json"',
-    'outputFile="cairo-lang/simple_bootloader_input.json"',
-    'jq -n \
-    --argfile verifier_program "$verifier_program_file" \
-    --argfile proof "$proof_file" \
-    --argfile recursion_program "$recursion_program_file" \
-    -f "$simple_bootloader_input_tamplate" > "$outputFile"'
-], "Preapring recursion step input", cwd="./")
+    "python bootloader_input.py \
+        cairo-lang/cairo_verifier.json \
+        cairo-lang/simple_bootloader_proof.json \
+        stone-prover/e2e_test/fibonacci_compiled.json \
+        cairo-lang/simple_bootloader_input.json"
+], "Preapring recursion step input", cwd=".")
 
 log_and_run([
     "cairo-run \
     --program=simple_bootloader.json \
-    --layout=recursive \
+    --layout=recursive_with_poseidon \
     --program_input=simple_bootloader_input.json \
     --air_public_input=simple_bootloader_public_input.json \
     --air_private_input=simple_bootloader_private_input.json \
@@ -45,5 +40,5 @@ log_and_run([
     --public_input_file=simple_bootloader_public_input.json \
     --prover_config_file=cpu_air_prover_config.json \
     --parameter_file=cpu_air_params.json \
-    -generate_annotations"
+    --generate_annotations"
 ], "Proving recursion step", cwd="cairo-lang")
